@@ -3,6 +3,7 @@ require("@nomicfoundation/hardhat-toolbox");
 const fs = require("fs");
 let mnemonicChromePhrase = fs.readFileSync(".secret-chrome").toString().trim();
 const maticProjectId = fs.readFileSync(".matic").toString().trim();
+const polygonscanApiKey = fs.readFileSync(".polygonscan").toString().trim();
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -25,6 +26,10 @@ module.exports = {
     },
   },
   etherscan: {
-    apiKey: fs.readFileSync(".etherscan").toString().trim(),
-  }
+    //apiKey: fs.readFileSync(".etherscan").toString().trim(),
+    apiKey: {
+      polygonMumbai: polygonscanApiKey
+    }
+  },
+
 };
