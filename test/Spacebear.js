@@ -1,13 +1,26 @@
 const { expect } = require("chai");
 const hre = require("hardhat");
+const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers");
+
 
 describe("Spacebear", function () {
+  async function deploySpacebearAndMintTokenFixture() {
+      // deploy a lock contract where funds can be withdrawn
+      // one year in the future
+      const Spacebear = await hre.ethers.getContractFactory("Spacebear");
+      const spacebearInstance = await Spacebear.deploy();  
+      const [owner, otherAccount] = await ethers.getSigners();
+      await spacebearInstance.safeMint(otherAccount.address);
+      return { spacebearInstance };
+  }
+    
   it("be able to mint a token", async function () {
     // deploy a lock contract where funds can be withdrawn
     // one year in the future
-    const Spacebear = await hre.ethers.getContractFactory("Spacebear");
-    const spacebearInstance = await Spacebear.deploy();
-
+    const { spacebearInstance } = await loadFixture(
+        deploySpacebearAndMintTokenFixture
+      );
+  
     const [owner, otherAccount] = await ethers.getSigners();
     await spacebearInstance.safeMint(otherAccount.address)
 
@@ -15,10 +28,9 @@ describe("Spacebear", function () {
   });
 
   it("fails to transfer tokens from the wrong address", async function () {
-    // deploy a lock contract where funds can be withdrawn
-    // one year in the future
-    const Spacebear = await hre.ethers.getContractFactory("Spacebear");
-    const spacebearInstance = await Spacebear.deploy();
+    const { spacebearInstance } = await loadFixture(
+        deploySpacebearAndMintTokenFixture
+      );
 
     const [owner, nftOwnerAccount, notNftOwnerAccount] = await ethers.getSigners();
     await spacebearInstance.safeMint(nftOwnerAccount.address)

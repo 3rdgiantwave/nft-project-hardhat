@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
+import "hardhat/console.sol";
 contract Spacebear is ERC721, Ownable {
     using Counters for Counters.Counter;
 
@@ -18,12 +19,14 @@ contract Spacebear is ERC721, Ownable {
 
     function safeMint(address to) public onlyOwner {
         uint256 tokenId = _tokenIdCounter.current();
+        console.log("got here", tokenId);
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
     }
 
     function buyToken() public payable {
         uint256 tokenId = _tokenIdCounter.current();
+        console.log("got here", tokenId);
         require(msg.value == tokenId * 0.1 ether, "Not enough funds sent");
 
         _tokenIdCounter.increment();
